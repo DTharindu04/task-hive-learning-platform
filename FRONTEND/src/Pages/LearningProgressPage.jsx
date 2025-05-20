@@ -95,6 +95,40 @@ const LearningProgressPage = () => {
   const { modalState, openModal, closeModal } = useConfirmModal();
 
   
+ const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+  } = useForm({
+    defaultValues: {
+      title: "",
+      description: "",
+      tutorialName: "",
+      projectName: "",
+      skillsLearned: "",
+      challenges: "",
+      nextSteps: "",
+    },
+  });
+
+  useEffect(() => {
+    fetchProgressEntries();
+  }, []);
+
+  const fetchProgressEntries = async () => {
+    setLoading(true);
+    try {
+      const response = await getAllLearningProgress(currentUser?.token);
+      setProgressEntries(response.data);
+    } catch (error) {
+      console.error("Error fetching learning progress entries:", error);
+      toast.error("Failed to load learning progress entries");
+    } finally {
+      setLoading(false);
+    }
+  };
 
     
    
