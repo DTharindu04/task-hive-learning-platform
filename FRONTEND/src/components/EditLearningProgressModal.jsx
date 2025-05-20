@@ -5,7 +5,27 @@ import { X, Award, BookOpen, Code, CheckCircle, Clock, AlertCircle } from "lucid
 import { updateLearningProgress } from "../api/learningProgressAPI";
 import toast from "react-hot-toast";
 
-
+// Status options
+const STATUS_OPTIONS = [
+  {
+    id: "not_started",
+    name: "Not Started",
+    icon: <AlertCircle size={16} className="mr-2" />,
+    color: "text-gray-400",
+  },
+  {
+    id: "in_progress",
+    name: "In Progress",
+    icon: <Clock size={16} className="mr-2" />,
+    color: "text-yellow-400",
+  },
+  {
+    id: "completed",
+    name: "Completed",
+    icon: <CheckCircle size={16} className="mr-2" />,
+    color: "text-green-400",
+  },
+];
 
 
 const EditLearningProgressModal = ({
