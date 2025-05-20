@@ -69,7 +69,7 @@ const FollowersModal = ({
         toast.success("Now following user");
       }
 
-      // Toggle follow state
+       // toggle follow state
       setFollowStates({
         ...followStates,
         [userId]: !followStates[userId],
