@@ -28,6 +28,7 @@ const LearningPlanCard = ({
   const isLikedByUser = plan.likes?.some(
       (like) => like.userId === currentUser?.id
   );
+  // Check if the current user is the owner of this plan
   const isOwner = plan.userId === currentUser?.id;
 
   const handleDeleteClick = () => {
