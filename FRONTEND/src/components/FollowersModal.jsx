@@ -106,7 +106,7 @@ const FollowersModal = ({
                   transition={{ type: "spring", damping: 20, stiffness: 300 }}
                   onClick={handleModalClick}
               >
-                {/* Header with hexagon pattern background */}
+                {/* Header with hexagon pattern backgrounf */}
                 <div className="relative bg-gradient-to-r from-gray-800 to-gray-900 py-4 px-5 border-b border-gray-800">
                   {/* Honeycomb Pattern */}
                   <div className="absolute inset-0 opacity-20" style={{
