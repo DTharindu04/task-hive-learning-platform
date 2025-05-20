@@ -1,0 +1,192 @@
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Edit, Trash, Heart, MessageSquare, Award, BookOpen, Code } from "lucide-react";
+import Comment, { CommentForm } from "./CommentComponent";
+import useConfirmModal from "../hooks/useConfirmModal";
+import ConfirmModal from "./ConfirmModal";
+import UserAvatar from "./UserAvatar";
+import { Link } from "react-router-dom";
+
+
+
+
+
+const LearningProgressCard = ({
+                                progress,
+                                currentUser,
+                                onLike,
+                                onComment,
+                                onDeleteComment,
+                                onUpdateComment,
+                                onEdit,
+                                onDelete,
+                                token,
+                              }) => {
+  const [showComments, setShowComments] = useState(false);
+  const { modalState, openModal, closeModal } = useConfirmModal();
+
+  const isLikedByUser = progress.likes?.some(
+      (like) => like.userId === currentUser?.id
+  );
+
+  const isOwner = progress.userId === currentUser?.id;
+
+  const handleDeleteClick = () => {
+    onDelete(progress.id);
+  };
+
+ 
+
+  //get the template and status info
+  const templateInfo = TEMPLATE_TYPES[progress.templateType] || {
+    icon: <Award size={16} className="mr-1.5" />,
+    name: "Progress",
+  };
+
+  const statusInfo = STATUS_OPTIONS[progress.status] || {
+    name: "Status",
+    color: "bg-gray-800 text-gray-300 border border-gray-700",
+  };
+
+  return (
+      <div className="bg-gray-900 rounded-xl shadow-lg border border-gray-800 overflow-hidden">
+        {/* Progress Header */}
+        <div className="p-4 flex items-center justify-between border-b border-gray-800">
+          <div className="flex items-center space-x-3">
+            <UserAvatar
+                src={progress.userProfileImage}
+                alt={progress.userName}
+                name={progress.userName}
+                size="h-10 w-10"
+            />
+            <div>
+              <Link to={`/profile/${progress.userId}`}>
+                <h3 className="font-medium text-white hover:text-yellow-400 transition-colors">
+                  {progress.userName}
+                </h3>
+              </Link>
+              <p className="text-xs text-gray-400">
+                {new Date(progress.createdAt).toLocaleString()}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2">
+          <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-800 text-yellow-400 border border-gray-700">
+            {templateInfo.icon} {templateInfo.name}
+          </span>
+            <span
+                className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium ${statusInfo.color}`}
+            >
+            {statusInfo.name}
+          </span>
+
+            {isOwner && (
+                <div className="flex space-x-1 ml-2">
+                  <motion.button
+                      onClick={() => onEdit(progress)}
+                      className="p-1.5 rounded-full hover:bg-gray-800 text-gray-400 hover:text-yellow-400 transition-colors cursor-pointer"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                  >
+                    <Edit size={16} />
+                  </motion.button>
+                  <motion.button
+                      onClick={handleDeleteClick}
+                      className="p-1.5 rounded-full hover:bg-gray-800 text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                  >
+                    <Trash size={16} />
+                  </motion.button>
+                </div>
+            )}
+          </div>
+        </div>
+
+        {/* Progress Content */}
+        <div className="p-4">
+          <h3 className="text-lg font-medium text-white mb-2">
+            {progress.title}
+          </h3>
+
+          {progress.description && (
+              <p className="text-gray-300 mb-3">{progress.description}</p>
+          )}
+
+          <div className="bg-gray-800/70 rounded-lg p-4 mb-4 space-y-3 border border-gray-700">
+            {progress.tutorialName && (
+                <div className="flex flex-wrap">
+                  <span className="text-yellow-400 font-medium w-28">Tutorial:</span>
+                  <span className="text-gray-300 flex-1">{progress.tutorialName}</span>
+                </div>
+            )}
+
+            {progress.projectName && (
+                <div className="flex flex-wrap">
+                  <span className="text-yellow-400 font-medium w-28">Project:</span>
+                  <span className="text-gray-300 flex-1">{progress.projectName}</span>
+                </div>
+            )}
+
+            {progress.skillsLearned && (
+                <div className="flex flex-wrap">
+                  <span className="text-yellow-400 font-medium w-28">Skills:</span>
+                  <div className="flex flex-wrap gap-1.5 flex-1">
+                    {progress.skillsLearned.split(",").map((skill, index) => (
+                        <span
+                            key={index}
+                            className="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-medium bg-yellow-500/20 text-yellow-400 border border-yellow-700/30"
+                        >
+                    {skill.trim()}
+                  </span>
+                    ))}
+                  </div>
+                </div>
+            )}
+
+            {progress.challenges && (
+                <div className="flex flex-wrap">
+              <span className="text-yellow-400 font-medium w-28">
+                Challenges:
+              </span>
+                  <span className="text-gray-300 flex-1">{progress.challenges}</span>
+                </div>
+            )}
+
+            {progress.nextSteps && (
+                <div className="flex flex-wrap">
+              <span className="text-yellow-400 font-medium w-28">
+                Next Steps:
+              </span>
+                  <span className="text-gray-300 flex-1">{progress.nextSteps}</span>
+                </div>
+            )}
+          </div>
+
+          {/* Action Buttons */}
+          
+        </div>
+
+        {/* Comments Section */}
+        {showComments && (
+            <div className="p-4 bg-gray-800/50 border-t border-gray-800">
+              {/* Add Comment Form */}
+              <CommentForm
+                  postId={progress.id}
+                  onAddComment={handleAddComment}
+                  currentUser={currentUser}
+              />
+
+              {/* Comments List */}
+              
+            </div>
+        )}
+
+       
+      
+      </div>
+  );
+};
+
+export default LearningProgressCard;
