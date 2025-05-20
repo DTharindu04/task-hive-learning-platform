@@ -8,6 +8,7 @@ import UserAvatar from "./UserAvatar";
 import { Link as NavigateLink } from "react-router-dom";
 import toast from "react-hot-toast";
 
+// Component to display a learning plan card
 const LearningPlanCard = ({
                             plan,
                             currentUser,
