@@ -22,14 +22,13 @@ const STATUS_OPTIONS = {
     color: "bg-green-500/20 text-green-400 border border-green-700/30"
   },
 };
+
 // template types for display with Lucide icons
 const TEMPLATE_TYPES = {
   general: { icon: <Award size={16} className="mr-1.5" />, name: "General Progress" },
   tutorial: { icon: <BookOpen size={16} className="mr-1.5" />, name: "Tutorial" },
   project: { icon: <Code size={16} className="mr-1.5" />, name: "Project" },
 };
-
-
 
 const LearningProgressCard = ({
                                 progress,
@@ -55,7 +54,13 @@ const LearningProgressCard = ({
     onDelete(progress.id);
   };
 
- 
+  const handleAddComment = async (progressId, commentData) => {
+    try {
+      await onComment(progressId, commentData);
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
 
   //get the template and status info
   const templateInfo = TEMPLATE_TYPES[progress.templateType] || {
@@ -185,7 +190,31 @@ const LearningProgressCard = ({
           </div>
 
           {/* Action Buttons */}
-          
+          <div className="flex justify-between items-center mt-2 pb-2 border-b border-gray-800">
+            <motion.button
+                className={`flex items-center space-x-1 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                    isLikedByUser
+                        ? "text-red-500"
+                        : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                }`}
+                onClick={() => onLike(progress.id)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+            >
+              <Heart size={18} className={isLikedByUser ? "fill-red-500" : ""} />
+              <span>{progress.likes?.length || 0}</span>
+            </motion.button>
+
+            <motion.button
+                className="flex items-center space-x-1 px-3 py-1.5 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white transition-colors cursor-pointer"
+                onClick={() => setShowComments(!showComments)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+            >
+              <MessageSquare size={18} />
+              <span>{progress.comments?.length || 0}</span>
+            </motion.button>
+          </div>
         </div>
 
         {/* Comments Section */}
@@ -199,7 +228,27 @@ const LearningProgressCard = ({
               />
 
               {/* Comments List */}
-              
+              <div className="space-y-3 max-h-64 overflow-y-auto mt-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent pr-2">
+                {progress.comments && progress.comments.length > 0 ? (
+                    progress.comments.map((comment) => (
+                        <Comment
+                            key={comment.id}
+                            comment={comment}
+                            postId={progress.id}
+                            currentUser={currentUser}
+                            postUserId={progress.userId}
+                            onCommentUpdated={onUpdateComment}
+                            onCommentDeleted={onDeleteComment}
+                            token={token}
+                            commentType="LEARNING_PROGRESS"
+                        />
+                    ))
+                ) : (
+                    <p className="text-center text-gray-500 py-3">
+                      No comments yet. Be the first to comment!
+                    </p>
+                )}
+              </div>
             </div>
         )}
 
@@ -215,10 +264,7 @@ const LearningProgressCard = ({
             confirmButtonClass={modalState.confirmButtonClass}
             type={modalState.type}
         />
-      
-      
       </div>
-      
   );
 };
 
