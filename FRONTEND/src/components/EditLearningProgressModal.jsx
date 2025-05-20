@@ -26,6 +26,7 @@ const STATUS_OPTIONS = [
     color: "text-green-400",
   },
 ];
+
 // Templates
 const TEMPLATES = [
   {
@@ -92,9 +93,44 @@ const EditLearningProgressModal = ({
     setSelectedStatus(e.target.value);
   };
 
-  
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    try {
+      const currentTemplate = TEMPLATES.find((t) => t.id === selectedTemplate);
+      const requiredFields = currentTemplate.fields.filter(
+          (field) =>
+              field === "title" ||
+              field === "description" ||
+              field === "tutorialName" ||
+              field === "projectName"
+      );
 
- 
+      const isValid = requiredFields.every((field) => data[field]?.trim());
+      if (!isValid) {
+        toast.error("Please fill in all required fields");
+        setIsSubmitting(false);
+        return;
+      }
+
+      const updatedData = {
+        ...data,
+        templateType: selectedTemplate,
+        status: selectedStatus,
+      };
+
+      await updateLearningProgress(progressEntry.id, updatedData, token);
+      toast.success("Progress updated successfully");
+      onProgressUpdated();
+      onClose();
+    } catch (error) {
+      console.error("Error updating learning progress:", error);
+      toast.error("Failed to update progress");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const currentTemplate = TEMPLATES.find((t) => t.id === selectedTemplate);
 
   return (
       <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50">
@@ -105,7 +141,20 @@ const EditLearningProgressModal = ({
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.3 }}
         >
-          
+          <div className="flex justify-between items-center p-4 border-b border-gray-800">
+            <h3 className="text-lg font-bold text-white flex items-center">
+            <span className="text-yellow-400 mr-2">
+              {currentTemplate.icon}
+            </span>
+              Edit Learning Progress
+            </h3>
+            <button
+                onClick={onClose}
+                className="text-gray-400 hover:text-white transition-colors rounded-full p-1 hover:bg-gray-800 cursor-pointer"
+            >
+              <X size={20} />
+            </button>
+          </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="p-4">
             <div className="grid grid-cols-2 gap-4 mb-4">
@@ -300,7 +349,27 @@ const EditLearningProgressModal = ({
               )}
             </div>
 
-            
+            <div className="flex justify-end space-x-3 mt-6">
+              <motion.button
+                  type="button"
+                  onClick={onClose}
+                  className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors cursor-pointer"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  disabled={isSubmitting}
+              >
+                Cancel
+              </motion.button>
+              <motion.button
+                  type="submit"
+                  className="px-4 py-2 bg-yellow-500 text-black rounded-lg hover:bg-yellow-400 transition-colors disabled:bg-yellow-900 disabled:text-gray-500 cursor-pointer"
+                  whileHover={{ scale: isSubmitting ? 1 : 1.03 }}
+                  whileTap={{ scale: isSubmitting ? 1 : 0.97 }}
+                  disabled={isSubmitting}
+              >
+                {isSubmitting ? "Updating..." : "Update Progress"}
+              </motion.button>
+            </div>
           </form>
         </motion.div>
       </div>
