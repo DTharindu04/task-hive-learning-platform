@@ -88,7 +88,16 @@ public class PostController {
         Post updatedPost = postService.updateComment(postId, commentId, comment);
         return new ResponseEntity<>(updatedPost, HttpStatus.OK);
     }
-    
+
+    // Delete a comment
+    @DeleteMapping("/{postId}/comments/{commentId}")
+    public ResponseEntity<Post> deleteComment(
+            @PathVariable String postId,
+            @PathVariable String commentId,
+            @RequestParam String userId) {
+        Post updatedPost = postService.deleteComment(postId, commentId, userId);
+        return new ResponseEntity<>(updatedPost, HttpStatus.OK);
+    }
 
 
 
