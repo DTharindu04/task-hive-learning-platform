@@ -23,13 +23,13 @@ export const CommentForm = ({ postId, onAddComment, currentUser }) => {
   
 // Initialize react-hook-form with default empty comment
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
-    defaultValues: {
-      commentText: "",
+     register,
+     handleSubmit,
+     formState: { errors },
+   reset,
+} = useForm({
+     defaultValues: {
+       commentText: "",
     },
   });
 
