@@ -63,6 +63,7 @@ const FollowersModal = ({
     }
 
     try {
+      // Perform follow or unfollow based on current state
       if (followStates[userId]) {
         await unfollowUser(userId, token);
         toast.success("Unfollowed user");
