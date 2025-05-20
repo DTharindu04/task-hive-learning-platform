@@ -16,7 +16,9 @@ import {
 } from "../api/learningPlanAPI";
 import UserAvatar from "./UserAvatar";
 
+// Comment form component for adding new comments
 export const CommentForm = ({ postId, onAddComment, currentUser }) => {
+  // State to manage form submission
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
