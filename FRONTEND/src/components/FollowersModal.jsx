@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { getUsersById, followUser, unfollowUser } from "../api/profileAPI";
 import UserAvatar from "./UserAvatar";
 
+// FollowersModal component handles showing followers/following list with follow/unfollow functionality
 const FollowersModal = ({
                           isOpen,
                           onClose,
