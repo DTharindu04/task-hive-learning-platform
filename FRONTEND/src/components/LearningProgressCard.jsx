@@ -7,6 +7,21 @@ import ConfirmModal from "./ConfirmModal";
 import UserAvatar from "./UserAvatar";
 import { Link } from "react-router-dom";
 
+// status options for display with updated styling for TaskHive theme
+const STATUS_OPTIONS = {
+  not_started: {
+    name: "Not Started",
+    color: "bg-gray-800 text-gray-300 border border-gray-700"
+  },
+  in_progress: {
+    name: "In Progress",
+    color: "bg-yellow-500/20 text-yellow-400 border border-yellow-700/30"
+  },
+  completed: {
+    name: "Completed",
+    color: "bg-green-500/20 text-green-400 border border-green-700/30"
+  },
+};
 
 
 
