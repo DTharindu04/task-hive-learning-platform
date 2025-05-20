@@ -56,13 +56,40 @@ export const deleteLearningProgress = async (progressId, token) => {
   return apiClient.delete(`/learning-progress/${progressId}`);
 };
 
+//add like
+export const addLike = async (progressId, likeData, token) => {
+  const apiClient = createApiClient(token);
+  return apiClient.post(`/learning-progress/${progressId}/likes`, likeData);
+};
 
+//remove like
+export const removeLike = async (progressId, userId, token) => {
+  const apiClient = createApiClient(token);
+  return apiClient.delete(`/learning-progress/${progressId}/likes/${userId}`);
+};
 
+//add comment
+export const addComment = async (progressId, commentData, token) => {
+  const apiClient = createApiClient(token);
+  return apiClient.post(
+    `/learning-progress/${progressId}/comments`,
+    commentData
+  );
+};
 
-
-
-
-
+//update comment
+export const updateLearningProgressComment = async (
+  progressId,
+  commentId,
+  commentData,
+  token
+) => {
+  const apiClient = createApiClient(token);
+  return apiClient.put(
+    `/learning-progress/${progressId}/comments/${commentId}`,
+    commentData
+  );
+};
 
 //delete comment
 export const deleteLearningProgressComment = async (
