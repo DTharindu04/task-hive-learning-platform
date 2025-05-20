@@ -332,4 +332,4 @@ const SkillSharingCard = ({
   );
 };
 
-export default SkillSharingCard;
+export default  SkillSharingCard;
