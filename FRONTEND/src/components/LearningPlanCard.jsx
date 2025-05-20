@@ -24,6 +24,7 @@ const LearningPlanCard = ({
   const [saved, setSaved] = useState(false);
   const { modalState, openModal, closeModal } = useConfirmModal();
 
+    // Check if the current user liked this plan
   const isLikedByUser = plan.likes?.some(
       (like) => like.userId === currentUser?.id
   );
