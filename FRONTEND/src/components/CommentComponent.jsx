@@ -7,8 +7,8 @@ import toast from "react-hot-toast";
 import useConfirmModal from "../hooks/useConfirmModal";
 import ConfirmModal from "./ConfirmModal";
 import {
-  deleteLearningProgressComment,
-  updateLearningProgressComment,
+   deleteLearningProgressComment,
+   updateLearningProgressComment,
 } from "../api/learningProgressAPI";
 import {
   deleteLearningPlanComment,
