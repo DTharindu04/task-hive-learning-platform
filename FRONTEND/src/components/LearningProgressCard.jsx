@@ -183,9 +183,22 @@ const LearningProgressCard = ({
             </div>
         )}
 
-       
+        {/* Confirmation Modal */}
+        <ConfirmModal
+            isOpen={modalState.isOpen}
+            onClose={closeModal}
+            onConfirm={modalState.onConfirm}
+            title={modalState.title}
+            message={modalState.message}
+            confirmText={modalState.confirmText}
+            cancelText={modalState.cancelText}
+            confirmButtonClass={modalState.confirmButtonClass}
+            type={modalState.type}
+        />
+      
       
       </div>
+      
   );
 };
 
