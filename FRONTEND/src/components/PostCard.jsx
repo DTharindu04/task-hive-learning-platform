@@ -100,6 +100,7 @@ const PostCard = ({
             <span>{post.likes?.length || 0}</span>
           </button>
 
+          {/* Toggle visibility of comments section when button is clicked */}
           <button
             className="flex items-center space-x-1 px-3 py-1.5 rounded-lg text-gray-600 hover:bg-gray-100 hover:bg-opacity-30 transition-colors"
             onClick={() => setShowComments(!showComments)}
