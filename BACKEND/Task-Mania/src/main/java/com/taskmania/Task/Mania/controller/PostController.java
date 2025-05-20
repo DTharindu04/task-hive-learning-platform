@@ -44,6 +44,34 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
+    // Get a post by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Post> getPostById(@PathVariable String id) {
+        Post post = postService.getPostById(id);
+        return new ResponseEntity<>(post, HttpStatus.OK);
+    }
+
+    // Get posts by user ID
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable String userId) {
+        List<Post> posts = postService.getPostsByUserId(userId);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    // Update a post
+    @PutMapping("/{id}")
+    public ResponseEntity<Post> updatePost(@PathVariable String id, @RequestBody Post post) {
+        Post updatedPost = postService.updatePost(id, post);
+        return new ResponseEntity<>(updatedPost, HttpStatus.OK);
+    }
+
+    // Delete a post
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePost(@PathVariable String id) {
+        postService.deletePost(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 
 
 
