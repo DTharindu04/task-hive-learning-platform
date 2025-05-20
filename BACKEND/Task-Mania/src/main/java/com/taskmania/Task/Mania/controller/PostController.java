@@ -106,6 +106,13 @@ public class PostController {
         return new ResponseEntity<>(updatedPost, HttpStatus.CREATED);
     }
 
+    // Remove a like from a post
+    @DeleteMapping("/{postId}/likes/{userId}")
+    public ResponseEntity<Post> removeLike(@PathVariable String postId, @PathVariable String userId) {
+        Post updatedPost = postService.removeLike(postId, userId);
+        return new ResponseEntity<>(updatedPost, HttpStatus.OK);
+    }
+
 
 
 
