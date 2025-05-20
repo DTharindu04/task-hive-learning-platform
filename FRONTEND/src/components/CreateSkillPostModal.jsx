@@ -359,7 +359,7 @@ const CreatePostForm = ({ onPostCreated }) => {
               </label>
 
               <label
-                  className={`flex items-center space-x-1 p-2 rounded-lg transition-colors ${
+                  className={`flex items-center space-x-1 p-2 rounded-lg  transition-colors ${
                       isSubmitting || isProcessingFiles
                           ? "bg-gray-800 text-gray-600 cursor-not-allowed"
                           : "bg-gray-800 text-gray-300 cursor-pointer hover:bg-gray-700 hover:text-yellow-400"

@@ -387,4 +387,4 @@ const SkillSharingFeed = () => {
     );
 };
 
-export default SkillSharingFeed;
+export default  SkillSharingFeed;

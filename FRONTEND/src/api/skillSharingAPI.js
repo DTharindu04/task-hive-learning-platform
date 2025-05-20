@@ -92,7 +92,7 @@ export const uploadMedia = async (files, token) => {
     formData.append("files", file);
   });
 
-  return apiClient.post("/uploads", formData, {
+  return apiClient.post("/uploads",  formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
