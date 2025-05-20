@@ -92,7 +92,7 @@ const LearningPlanCard = ({
               </p>
             </div>
           </div>
-
+        /*Edit the plan*/               
           {isOwner && (
               <div className="flex space-x-1">
                 <motion.button
@@ -109,7 +109,7 @@ const LearningPlanCard = ({
                     className="p-1.5 rounded-full hover:bg-gray-800 text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    aria-label=" Delete plan "
+                    aria-label="Delete plan"
                 >
                   <Trash size={16} />
                 </motion.button>
@@ -270,6 +270,7 @@ const LearningPlanCard = ({
         )}
 
         {/* Confirmation Modal */}
+
         <ConfirmModal
             isOpen={modalState.isOpen}
             onClose={closeModal}

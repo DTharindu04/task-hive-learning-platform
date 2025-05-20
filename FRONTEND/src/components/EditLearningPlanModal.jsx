@@ -8,6 +8,8 @@ import toast from "react-hot-toast";
 const EditLearningPlanModal = ({ plan, onClose, onPlanUpdated, token }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+// React Hook Form setup with default values from the passed-in plan  
+
   const {
     register,
     handleSubmit,
@@ -35,7 +37,7 @@ const EditLearningPlanModal = ({ plan, onClose, onPlanUpdated, token }) => {
       };
 
       await updateLearningPlan(plan.id, updatedData, token);
-      toast.success("Learning plan updated successfully");
+      toast.success(" Learning plan updated successfully ");
       onPlanUpdated();
       onClose();
     } catch (error) {
