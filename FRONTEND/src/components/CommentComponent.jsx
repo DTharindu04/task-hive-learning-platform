@@ -20,7 +20,8 @@ import UserAvatar from "./UserAvatar";
 export const CommentForm = ({ postId, onAddComment, currentUser }) => {
   // State to manage form submission
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  
+// Initialize react-hook-form with default empty comment
   const {
     register,
     handleSubmit,
