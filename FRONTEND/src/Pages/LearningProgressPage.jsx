@@ -79,9 +79,6 @@ const TEMPLATES = [
   },
 ];
 
-
-
-
 const LearningProgressPage = () => {
   const { currentUser } = useAuth();
   const [progressEntries, setProgressEntries] = useState([]);
@@ -94,8 +91,7 @@ const LearningProgressPage = () => {
   const [filterType, setFilterType] = useState("all");
   const { modalState, openModal, closeModal } = useConfirmModal();
 
-  
- const {
+  const {
     register,
     handleSubmit,
     formState: { errors },
@@ -130,17 +126,239 @@ const LearningProgressPage = () => {
     }
   };
 
-    
-   
+  const handleTemplateChange = (e) => {
+    setSelectedTemplate(e.target.value);
+    reset({
+      title: "",
+      description: "",
+      tutorialName: "",
+      projectName: "",
+      skillsLearned: "",
+      challenges: "",
+      nextSteps: "",
+    });
+  };
 
-  
-  
+  const handleStatusChange = (e) => {
+    setSelectedStatus(e.target.value);
+  };
 
-  
+  const handleProgressSubmit = async (data) => {
+    if (!currentUser) {
+      toast.error("You must be logged in to share progress");
+      return;
+    }
 
- 
+    const currentTemplate = TEMPLATES.find((t) => t.id === selectedTemplate);
+    const requiredFields = currentTemplate.fields.filter(
+        (field) =>
+            field === "title" ||
+            field === "description" ||
+            field === "tutorialName" ||
+            field === "projectName"
+    );
 
- 
+    const isValid = requiredFields.every((field) => data[field]?.trim());
+    if (!isValid) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const progressData = {
+        userId: currentUser.id,
+        userName: currentUser.name,
+        userProfileImage: currentUser.profileImage,
+        templateType: selectedTemplate,
+        status: selectedStatus,
+        ...data,
+      };
+
+      const response = await createLearningProgress(
+          currentUser.id,
+          progressData,
+          currentUser.token
+      );
+
+      toast.success("Progress shared successfully");
+
+      setProgressEntries([response.data, ...progressEntries]);
+
+      reset();
+      setSelectedTemplate(TEMPLATES[0].id);
+      setSelectedStatus(STATUS_OPTIONS[0].id);
+      setShowCreateForm(false);
+    } catch (error) {
+      console.error("Error creating learning progress:", error);
+      toast.error("Failed to share progress");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleLike = async (progressId) => {
+    if (!currentUser) {
+      toast.error("You must be logged in to like this progress");
+      return;
+    }
+
+    try {
+      const isLiked = progressEntries
+          .find((p) => p.id === progressId)
+          ?.likes?.some((like) => like.userId === currentUser.id);
+
+      if (isLiked) {
+        // Unlike
+        await removeLike(progressId, currentUser.id, currentUser.token);
+
+        // Update state
+        setProgressEntries(
+            progressEntries.map((entry) => {
+              if (entry.id === progressId) {
+                return {
+                  ...entry,
+                  likes: entry.likes.filter(
+                      (like) => like.userId !== currentUser.id
+                  ),
+                };
+              }
+              return entry;
+            })
+        );
+      } else {
+        // Like
+        const likeData = { userId: currentUser.id };
+        const response = await addLike(progressId, likeData, currentUser.token);
+
+        // Update state
+        setProgressEntries(
+            progressEntries.map((entry) => {
+              if (entry.id === progressId) {
+                return response.data;
+              }
+              return entry;
+            })
+        );
+      }
+    } catch (error) {
+      console.error("Error toggling like:", error);
+      toast.error("Failed to process like");
+    }
+  };
+
+  const handleAddComment = async (progressId, commentData) => {
+    if (!currentUser) {
+      toast.error("You must be logged in to comment");
+      return;
+    }
+
+    try {
+      const response = await addComment(
+          progressId,
+          commentData,
+          currentUser.token
+      );
+
+      // Update state
+      setProgressEntries(
+          progressEntries.map((entry) => {
+            if (entry.id === progressId) {
+              return response.data;
+            }
+            return entry;
+          })
+      );
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      toast.error("Failed to add comment");
+      throw error;
+    }
+  };
+
+  const handleUpdateComment = async (progressId, commentId, updatedContent) => {
+    setProgressEntries(
+        progressEntries.map((progressEntry) => {
+          if (progressEntry.id === progressId) {
+            return {
+              ...progressEntry,
+              comments: progressEntry.comments.map((comment) => {
+                if (comment.id === commentId) {
+                  return {
+                    ...comment,
+                    content: updatedContent,
+                    updatedAt: new Date(),
+                  };
+                }
+                return comment;
+              }),
+            };
+          }
+          return progressEntry;
+        })
+    );
+  };
+
+  const handleDeleteComment = async (progressId, commentId) => {
+    setProgressEntries(
+        progressEntries.map((progressEntry) => {
+          if (progressEntry.id === progressId) {
+            return {
+              ...progressEntry,
+              comments: progressEntry.comments.filter(
+                  (comment) => comment.id !== commentId
+              ),
+            };
+          }
+          return progressEntry;
+        })
+    );
+  };
+
+  const handleEdit = (progress) => {
+    setEditingProgress(progress);
+  };
+
+  const handleProgressUpdated = async () => {
+    await fetchProgressEntries();
+    setEditingProgress(null);
+  };
+
+  const handleDelete = (progressId) => {
+    openModal({
+      title: "Delete Learning Progress",
+      message:
+          "Are you sure you want to delete this learning progress? This action cannot be undone.",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      type: "danger",
+      onConfirm: async () => {
+        try {
+          await deleteLearningProgress(progressId, currentUser.token);
+
+          // Update state
+          setProgressEntries(
+              progressEntries.filter((entry) => entry.id !== progressId)
+          );
+
+          toast.success("Learning progress deleted");
+        } catch (error) {
+          console.error("Error deleting learning progress:", error);
+          toast.error("Failed to delete learning progress");
+        }
+      },
+    });
+  };
+
+  // Get filtered progress entries
+  const getFilteredEntries = () => {
+    if (filterType === "all") return progressEntries;
+    return progressEntries.filter(entry => entry.templateType === filterType);
+  };
+
+  // Get the current template object
+  const currentTemplate = TEMPLATES.find((t) => t.id === selectedTemplate);
 
   return (
       <div className="max-w-2xl mx-auto pb-10">
@@ -198,7 +416,33 @@ const LearningProgressPage = () => {
                     </div>
 
                     {/* Status */}
-                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-1">
+                        Status
+                      </label>
+                      <div className="relative">
+                        <select
+                            value={selectedStatus}
+                            onChange={handleStatusChange}
+                            className="w-full p-2 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-yellow-500 focus:outline-none appearance-none pl-8 pr-4"
+                            disabled={isSubmitting}
+                        >
+                          {STATUS_OPTIONS.map((status) => (
+                              <option key={status.id} value={status.id} className={status.color}>
+                                {status.name}
+                              </option>
+                          ))}
+                        </select>
+                        <div className="absolute inset-y-0 left-0 flex items-center pl-2.5 pointer-events-none">
+                      <span className={STATUS_OPTIONS.find(s => s.id === selectedStatus)?.color}>
+                        {STATUS_OPTIONS.find(s => s.id === selectedStatus)?.icon}
+                      </span>
+                        </div>
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none text-gray-400">
+                          <ChevronDown size={16} />
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Dynamic Form Fields based on selected template */}
