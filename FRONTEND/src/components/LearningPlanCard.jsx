@@ -89,7 +89,7 @@ const LearningPlanCard = ({
               </p>
             </div>
           </div>
-        /*Edit the plan*/               
+        {/*Edit the plan */}               
           {isOwner && (
               <div className="flex space-x-1">
                 <motion.button
