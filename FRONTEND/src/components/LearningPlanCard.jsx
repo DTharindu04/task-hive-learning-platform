@@ -42,7 +42,7 @@ const LearningPlanCard = ({
 
   const handleSave = () => {
     setSaved(!saved);
-    toast.success(saved ? "Learning plan removed from saved items" : "Learning plan saved successfully");
+    toast.success(saved ? "Learning plan removed from saved items" : " Learning plan saved successfully ");
   };
 
   const handleShare = () => {
