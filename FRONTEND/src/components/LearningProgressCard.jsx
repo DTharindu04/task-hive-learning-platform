@@ -22,7 +22,12 @@ const STATUS_OPTIONS = {
     color: "bg-green-500/20 text-green-400 border border-green-700/30"
   },
 };
-
+// template types for display with Lucide icons
+const TEMPLATE_TYPES = {
+  general: { icon: <Award size={16} className="mr-1.5" />, name: "General Progress" },
+  tutorial: { icon: <BookOpen size={16} className="mr-1.5" />, name: "Tutorial" },
+  project: { icon: <Code size={16} className="mr-1.5" />, name: "Project" },
+};
 
 
 
