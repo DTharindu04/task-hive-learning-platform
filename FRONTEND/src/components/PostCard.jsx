@@ -10,7 +10,8 @@ const PostCard = ({
 }) => {
   const [commentText, setCommentText] = useState("");
   const [showComments, setShowComments] = useState(false);
-
+  
+  // Trigger the onComment function passed from parent with current post ID and comment
   const handleSubmitComment = (e) => {
     e.preventDefault();
     if (!commentText.trim()) return;
