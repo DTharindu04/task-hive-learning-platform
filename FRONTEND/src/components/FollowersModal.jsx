@@ -54,6 +54,7 @@ const FollowersModal = ({
     }
   }, [users, isOpen, token, currentUser]);
 
+      // Redirect if not logged in
   const handleFollowToggle = async (userId) => {
     if (!currentUser) {
       toast.error("You must be logged in to follow users");
