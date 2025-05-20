@@ -32,6 +32,7 @@ export const CommentForm = ({ postId, onAddComment, currentUser }) => {
     },
   });
 
+  // Handle submit logic for the comment form
   const onSubmit = async (data) => {
     if (!data.commentText.trim()) return;
 
