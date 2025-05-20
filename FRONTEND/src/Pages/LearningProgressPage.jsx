@@ -29,6 +29,55 @@ import {
   Plus
 } from "lucide-react";
 
+// Status options
+const STATUS_OPTIONS = [
+  {
+    id: "not_started",
+    name: "Not Started",
+    icon: <AlertCircle size={16} className="mr-2" />,
+    color: "text-gray-400",
+  },
+  {
+    id: "in_progress",
+    name: "In Progress",
+    icon: <Clock size={16} className="mr-2" />,
+    color: "text-yellow-400",
+  },
+  {
+    id: "completed",
+    name: "Completed",
+    icon: <CheckCircle size={16} className="mr-2" />,
+    color: "text-green-400",
+  },
+];
+
+// Templates
+const TEMPLATES = [
+  {
+    id: "general",
+    name: "General Progress",
+    icon: <Award size={16} className="mr-2" />,
+    fields: ["title", "description", "skillsLearned"],
+  },
+  {
+    id: "tutorial",
+    name: "Tutorial Completion",
+    icon: <BookOpen size={16} className="mr-2" />,
+    fields: ["title", "tutorialName", "skillsLearned", "challenges"],
+  },
+  {
+    id: "project",
+    name: "Project Milestone",
+    icon: <Code size={16} className="mr-2" />,
+    fields: [
+      "title",
+      "projectName",
+      "description",
+      "skillsLearned",
+      "nextSteps",
+    ],
+  },
+];
 
 
 
