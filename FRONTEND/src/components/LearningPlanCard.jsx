@@ -35,6 +35,8 @@ const LearningPlanCard = ({
       onDelete(plan.id);
   };
 
+// Handles the process of submitting a new comment for a learning plan
+// Calls the parent-provided `onComment` function with the plan ID and comment data
   const handleAddComment = async (planId, commentData) => {
     try {
       await onComment(planId, commentData);
